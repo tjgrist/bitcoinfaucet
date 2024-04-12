@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { mutate } from "swr";
 
 export default function Form() {
   const [submitting, setSubmitting] = useState(false);
@@ -38,6 +39,7 @@ export default function Form() {
       setError(await response.json())
     }
     setSubmitting(false);
+    mutate("/api/transactions");
   };
 
   return (

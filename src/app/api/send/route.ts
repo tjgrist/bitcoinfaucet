@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import faucetLimit from '@/lib/faucetLimit';
 import { Network, validate } from 'bitcoin-address-validation';
-import { addTransactionToFirebaseFaucet } from '../../lib/addTransactionToFirebaseFaucet';
-import { withdrawToAddress } from '../../lib/withdrawToAddress';
+import { addTransactionToFirebaseFaucet as addTransactionToFaucet } from '../../../lib/addTransactionToFirebaseFaucet';
+import { withdrawToAddress } from '../../../lib/bitgoWithdraw';
 import { sendEmail } from '@/lib/resend';
+import { getLatestTransactionByIp } from '@/lib/getLatestTransactionByIp';
 
 export async function POST(req: NextRequest, res: NextResponse) {
 
@@ -20,18 +21,23 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const limit = await faucetLimit();
 
     try {
-        await withdrawToAddress(limit, address, ip);
+        await getLatestTransactionByIp(ip);
+    }
+    catch (error) {
+        return NextResponse.json({ error: 'Too many requests. Please try again later.'});
+    }
+    
+    try {
+        const data = await withdrawToAddress(limit, address, ip);
+        await addTransactionToFaucet(ip, limit, address, data.txid);
     }
     catch (error) {
         console.error('Error creating withdrawal', error);
-        return NextResponse.json({ error });
+        return NextResponse.json({ error: 'Error creating withdrawal.'});
     }
 
-    // add the ip to the firestore database collection 'ips'
-    await addTransactionToFirebaseFaucet(ip, limit, address);
-
     try {
-        const responseToMe = await sendEmail(ip);
+        const responseToMe = await sendEmail(ip, address, limit);
 
         return NextResponse.json(responseToMe);
     } catch (error) {
