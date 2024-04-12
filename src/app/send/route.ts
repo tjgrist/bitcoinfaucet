@@ -1,6 +1,3 @@
-
-
-
 import { NextRequest, NextResponse } from 'next/server';
 import faucetLimit from '@/lib/faucetLimit';
 import { Network, validate } from 'bitcoin-address-validation';

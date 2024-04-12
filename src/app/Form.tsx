@@ -2,34 +2,51 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 export default function Form() {
-
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setSubmitting(true);
+    setError(null)
     const data = {
-        address: e.target.address.value,
+      address: e.target.address.value,
     };
     const body = JSON.stringify(data);
     const endpoint = "/api/send";
 
     const options = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body,
     };
 
-   await fetch(endpoint, options);
-};
+    const response = await fetch(endpoint, options);
+    if (response.status === 200) {
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 3000);
+    }
+    else {
+      setError(await response.json())
+    }
+    setSubmitting(false);
+  };
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex w-full max-w-sm items-center space-x-2">
         <Input required type="address" id="address" placeholder="TBTC Address *" name="address" defaultValue="tb1qhqqqals048gr7g4uwnre35cmjlrlj745h85nk4" />
-        <Button type="submit">Get TBTC</Button>
+        <Button disabled={submitting} type="submit">Get TBTC</Button>
+        {submitted && <p className="text-green-500">Success!</p>}
+        {error && <p className="text-red-500">{error}</p>}
       </div>
     </form>
   );
