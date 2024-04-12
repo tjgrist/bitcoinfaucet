@@ -46,7 +46,7 @@ export default function Form() {
         <Input required type="address" id="address" placeholder="TBTC Address *" name="address" defaultValue="tb1qhqqqals048gr7g4uwnre35cmjlrlj745h85nk4" />
         <Button disabled={submitting} type="submit">Get TBTC</Button>
         {submitted && <p className="text-green-500">Success!</p>}
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500">Error: {error}</p>}
       </div>
     </form>
   );
