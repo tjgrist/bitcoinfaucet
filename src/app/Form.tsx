@@ -9,7 +9,7 @@ export default function Form() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const data = {
-        name: e.target.address.value,
+        address: e.target.address.value,
     };
     const body = JSON.stringify(data);
     const endpoint = "/api/send";
@@ -28,7 +28,7 @@ export default function Form() {
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex w-full max-w-sm items-center space-x-2">
-        <Input name="address" placeholder="TBTC Address" />
+        <Input required type="address" id="address" placeholder="TBTC Address *" name="address" defaultValue="tb1qhqqqals048gr7g4uwnre35cmjlrlj745h85nk4" />
         <Button type="submit">Get TBTC</Button>
       </div>
     </form>
