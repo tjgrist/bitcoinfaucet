@@ -36,7 +36,8 @@ export default function Form() {
       }, 3000);
     }
     else {
-      setError(await response.json())
+      const { error } = await response.json();
+      setError(error)
     }
     setSubmitting(false);
     mutate("/api/transactions");
