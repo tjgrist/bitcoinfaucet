@@ -10,13 +10,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     const { address } = await req.json();
 
-    if (!address) return NextResponse.error();
+    if (!address) return NextResponse.json({ error: 'No address found.' });
 
-    if (!validate(address, 'testnet' as Network)) return NextResponse.error();
+    if (!validate(address, 'testnet' as Network)) return NextResponse.json({ error: 'Invalid address' }, { status: 400 });
 
     const ip = req.headers.get('x-real-ip') || req.headers.get('x-forwarded-for') || req.ip;
 
-    if (!ip) return NextResponse.error();
+    if (!ip) return NextResponse.json({ error: 'No IP found.' }, { status: 400 });
 
     const limit = await faucetLimit();
 
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         await getLatestTransactionByIp(ip);
     }
     catch (error) {
-        return NextResponse.error();
+        return NextResponse.json({ error: 'Too many requests. Please try again later.'}, { status: 429});
     }
     
     try {
@@ -33,14 +33,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
     }
     catch (error) {
         console.error('Error creating withdrawal', error);
-        return NextResponse.error();
+        return NextResponse.json({ error: 'Error creating withdrawal.'}, { status: 500});
     }
 
     try {
-        const responseToMe = await sendEmail(ip, address, limit);
+        await sendEmail(ip, address, limit);
 
-        return NextResponse.json(responseToMe);
+        return NextResponse.json(null, { status: 200 });
     } catch (error) {
-        return NextResponse.error();
+        return NextResponse.json({ error }, { status: 500 });
     }
 }
