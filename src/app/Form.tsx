@@ -44,7 +44,7 @@ export default function Form() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex w-full max-w-sm items-center space-x-2">
+      <div className="flex w-full max-w-xl items-center space-x-2">
         <Input required type="address" id="address" placeholder="TBTC Address *" name="address" defaultValue="tb1qhqqqals048gr7g4uwnre35cmjlrlj745h85nk4" />
         <Button disabled={submitting} type="submit">Get TBTC</Button>
         {submitted && <p className="text-green-500">Success!</p>}

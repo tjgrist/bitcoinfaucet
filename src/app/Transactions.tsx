@@ -1,6 +1,8 @@
 "use client";
 import useSWR from "swr";
 import { Separator } from "@/components/ui/separator"
+import { DataTable } from "./DataTable";
+import { columns } from "./Columns";
 
 export default function Transactions() {
     const { data, error } = useSWR("/api/transactions", (url) => fetch(url).then((res) => res.json()));
@@ -9,11 +11,8 @@ export default function Transactions() {
     if (!data) return <div>Loading...</div>;
 
     return (
-        <div>
-            <Separator className="my-4" />
-            {data.map((tx: any) => (
-                <Tx key={tx.id} {...tx} />
-            ))}
+        <div className="mx-auto py-10">
+            <DataTable columns={columns} data={data} />
         </div>
     );
 }
