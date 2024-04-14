@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import faucetLimit from '@/lib/faucetLimit';
+import faucetConfig from '@/lib/faucetLimit';
 import { Network, validate } from 'bitcoin-address-validation';
 import { addTransactionToFirebaseFaucet as addTransactionToFaucet } from '../../../lib/addTransactionToFirebaseFaucet';
 import { withdrawToAddress } from '../../../lib/bitgoWithdraw';
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     if (!ip) return NextResponse.json('Could not determine IP.', { status: 400 });
 
-    const limit = await faucetLimit();
+    const config = await faucetConfig();
 
     try {
         await getLatestTransactionByIp(ip);
@@ -28,15 +28,15 @@ export async function POST(req: NextRequest, res: NextResponse) {
     }
     
     try {
-        const data = await withdrawToAddress(limit, address, ip);
-        await addTransactionToFaucet(ip, limit, address, data.txid);
+        const data = await withdrawToAddress(config.limit, address, ip);
+        await addTransactionToFaucet(ip, config.limit, address, data.txid);
     }
     catch (error) {
         return NextResponse.json('Could not send TBTC.', { status: 500});
     }
 
     try {
-        await sendEmail(ip, address, limit);
+        await sendEmail(ip, address, config.limit);
 
         return NextResponse.json(null, { status: 200 });
     } catch (error) {

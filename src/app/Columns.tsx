@@ -29,11 +29,12 @@ export const columns: ColumnDef<Transaction>[] = [
     accessorKey: "txId",
     header: "Transaction",
     cell: ({ row }) => (
-      <>
+      <div className="flex items-center space-x-1">
         <Link href={`https://blockstream.info/testnet/tx/${row.getValue("txId")}`} target="_blank" rel="noreferrer">
-          View <ExternalLinkIcon />
+          View 
         </Link>
-      </>
+        <ExternalLinkIcon />
+      </div>
     ),
   },
 ] 
