@@ -3,18 +3,34 @@ import useSWR from "swr";
 import { Separator } from "@/components/ui/separator"
 import { DataTable } from "./DataTable";
 import { columns } from "./Columns";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Transactions() {
+    const { data: balance, error: balError } = useSWR("/api/balance", (url) => fetch(url).then((res) => res.json()));
     const { data, error } = useSWR("/api/transactions", (url) => fetch(url).then((res) => res.json()));
 
     if (error) return <div>Error loading transactions.</div>;
-    if (!data) return <div>Loading...</div>;
+    if (!data) return <Loading />;
+
 
     return (
         <div className="mx-auto py-10">
-            <DataTable columns={columns} data={data} />
+            <DataTable columns={columns} data={data.slice(0, 5)} />
         </div>
     );
+}
+
+function Loading() {
+    return (
+        <div className="mx-auto py-10">
+            <Skeleton className="py-10 w-full h-[40px] rounded-full mb-2" />
+            <Skeleton className="py-10 w-full h-[40px] rounded-full mb-2" />
+            <Skeleton className="py-10 w-full h-[40px] rounded-full mb-2" />
+            <Skeleton className="py-10 w-full h-[40px] rounded-full mb-2" />
+            <Skeleton className="py-10 w-full h-[40px] rounded-full mb-2" />
+        </div>
+    );
+
 }
 
 

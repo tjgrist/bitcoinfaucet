@@ -2,18 +2,19 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { mutate } from "swr";
+import { useToast } from "@/components/ui/use-toast"
 
 export default function Form() {
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState(null);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const { toast } = useToast()
+
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    setSubmitting(true);
-    setError(null)
+    setSending(true);
     const data = {
       address: e.target.address.value,
     };
@@ -30,26 +31,39 @@ export default function Form() {
 
     const response = await fetch(endpoint, options);
     if (response.status === 200) {
-      setSubmitted(true);
-      setTimeout(() => {
-        setSubmitted(false);
-      }, 3000);
+      toast({
+        description: "Success! You will receive your TBTC shortly.",
+        duration: 5000,
+      })
     }
     else {
-      const { error } = await response.json();
-      setError(error)
+      const error = await response.json();
+      toast({
+        variant: "destructive",
+        description: error,
+        duration: 5000,
+      })
     }
-    setSubmitting(false);
+    setSending(false);
     mutate("/api/transactions");
   };
 
+  const button = useMemo(() => {
+    if (sending) return "Sending...";
+    if (sent) {
+      setTimeout(() => {
+        setSent(false);
+      }, 3000);
+      return "Sent!";
+    }
+    return "Get bitcoin";
+  }, [sending, sent]);
+
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex w-full max-w-xl items-center space-x-2">
-        <Input required type="address" id="address" placeholder="TBTC Address *" name="address" defaultValue="tb1qhqqqals048gr7g4uwnre35cmjlrlj745h85nk4" />
-        <Button disabled={submitting} type="submit">Get TBTC</Button>
-        {submitted && <p className="text-green-500">Success!</p>}
-        {error && <p className="text-red-500">Error: {error}</p>}
+      <div className="flex w-full max-w-xl items-center space-x-2 justify-center">
+        <Input disabled={sending} required type="address" id="address" placeholder="TBTC address *" name="address" defaultValue="tb1qhqqqals048gr7g4uwnre35cmjlrlj745h85nk4" />
+        <Button disabled={sending} type="submit">{button}</Button>
       </div>
     </form>
   );

@@ -1,4 +1,4 @@
-import { collection, getDocs, orderBy, query, where, Timestamp } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where, Timestamp, limit } from "firebase/firestore";
 import db from "./firebase";
 
 export async function getTransactions(ip?: string) {
@@ -23,8 +23,9 @@ export async function getTransactions(ip?: string) {
         const data = doc.data();
         return ({
             ...data,
+            tbtc: parseInt(data.tbtc) / 1e8,
             id: doc.id,
-            timestamp: data.timestamp.toDate().toLocaleDateString(),
+            timestamp: `${data.timestamp.toDate().toLocaleDateString()} - ${data.timestamp.toDate().toLocaleTimeString()}`,
         })
     });
 }

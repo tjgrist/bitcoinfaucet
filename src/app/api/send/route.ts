@@ -10,13 +10,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     const { address } = await req.json();
 
-    if (!address) return NextResponse.json({ error: 'No address found.' });
+    if (!address) return NextResponse.json('No TBTC wallet address provided.', { status: 400 });
 
-    if (!validate(address, 'testnet' as Network)) return NextResponse.json({ error: 'Invalid address' }, { status: 400 });
+    if (!validate(address, 'testnet' as Network)) return NextResponse.json('Invalid TBTC wallet address.', { status: 400 });
 
     const ip = req.headers.get('x-real-ip') || req.headers.get('x-forwarded-for') || req.ip;
 
-    if (!ip) return NextResponse.json({ error: 'No IP found.' }, { status: 400 });
+    if (!ip) return NextResponse.json('Could not determine IP.', { status: 400 });
 
     const limit = await faucetLimit();
 
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         await getLatestTransactionByIp(ip);
     }
     catch (error) {
-        return NextResponse.json({ error: 'Too many requests. Please try again later.'}, { status: 429});
+        return NextResponse.json('Too many requests. Please try again later.', { status: 429});
     }
     
     try {
@@ -32,8 +32,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         await addTransactionToFaucet(ip, limit, address, data.txid);
     }
     catch (error) {
-        console.error('Error creating withdrawal', error);
-        return NextResponse.json({ error: 'Error creating withdrawal.'}, { status: 500});
+        return NextResponse.json('Could not send TBTC.', { status: 500});
     }
 
     try {
@@ -41,6 +40,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
         return NextResponse.json(null, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ error }, { status: 500 });
+        return NextResponse.json("Something went wrong.", { status: 500 });
     }
 }
