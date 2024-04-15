@@ -42,14 +42,14 @@ export default function WalletInfo() {
                                     {data?.length}
                                 </div>
                                 <Separator />
-                                <h4 className="text-sm font-medium leading-none">Daily Limit</h4>
+                                <h4 className="text-sm font-medium leading-none">Transaction Amount Limit</h4>
                                 <div className="text-sm text-muted-foreground inline-flex">
-                                    {config?.dailyTransactionLimit}
+                                    <Bitcoin size={18}/> {config?.limit}
                                 </div>
                                 <Separator />
-                                <h4 className="text-sm font-medium leading-none">Send Limit</h4>
+                                <h4 className="text-sm font-medium leading-none">Daily Transaction Limit</h4>
                                 <div className="text-sm text-muted-foreground inline-flex">
-                                    <Bitcoin size={20}/> {config?.limit}
+                                    {config?.dailyTransactionLimit}
                                 </div>
                             </div>
                         </div>

@@ -5,6 +5,7 @@ import { columns } from "./Columns";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Filter } from "lucide-react";
 
 export default function Transactions() {
     const [filter, setFilter] = useState("all");
@@ -16,7 +17,7 @@ export default function Transactions() {
         <div className="mx-auto py-5">
             <div className="flex flex-row justify-between">
                 <h3 className="text-lg font-semibold py-2">Recent Transactions</h3>
-                <Button className="mt-1" variant="link" onClick={() => setFilter(filter === "mine" ? "all" : "mine")}>Filter by {filter === "mine" ? "all IPs" : "my IP"} </Button>
+                <Button className="mt-1" variant="link" onClick={() => setFilter(filter === "mine" ? "all" : "mine")}><Filter size={16} />&nbsp;Filter by {filter === "mine" ? "all IPs" : "my IP"}</Button>
             </div>
             {!data ? <Loading /> : <DataTable columns={columns} data={data.slice(0, 7)} />}
         </div>
