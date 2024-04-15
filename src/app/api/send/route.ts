@@ -31,8 +31,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const data = await withdrawToAddress(config.limit, address, ip);
         await addTransactionToFaucet(ip, config.limit, address, data.txid);
     }
-    catch (error) {
-        return NextResponse.json('Could not send tBTC.', { status: 500});
+    catch (error: any) {
+        return NextResponse.json(`Could not send tBTC. ${error?.message}`, { status: 500});
     }
 
     try {
