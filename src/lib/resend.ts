@@ -8,9 +8,9 @@ export const sendEmail = async (ip: string, address: string, limit: number) => {
     await resend.emails.send({
         from: fromEmail,
         to: [myEmail],
-        subject: 'TBTC Faucet was used!',
+        subject: 'tBTC Faucet was used!',
         html: `<div>
-            <p>${ip} used the TBTC Faucet!</p>
+            <p>${ip} used the tBTC Faucet!</p>
             <p>send to address: ${address}</p>
             <p>tbtc limit amount: ${limit}</p>
             <p><a href="https://app.bitgo-test.com">Bitgo</a></p>

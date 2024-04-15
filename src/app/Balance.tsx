@@ -10,10 +10,10 @@ export default function Balance() {
     if (isLoading) return null;
 
     return (
-        <div className="space-y-2">
-            <p className="flex text-sm text-muted-foreground">
-                <Bitcoin size={16}/> {balance}
-            </p>
+        <div className="space-y-2 text-center">
+            <div className="text-sm text-muted-foreground text-center justify-between">
+                {balance}
+            </div>
         </div>
     )
 }

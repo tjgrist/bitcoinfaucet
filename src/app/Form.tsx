@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { mutate } from "swr";
 import { useToast } from "@/components/ui/use-toast"
 import { Bitcoin } from "lucide-react";
+import Explainer from "./Explainer";
 
 export default function Form() {
   const [sending, setSending] = useState(false);
@@ -32,7 +33,7 @@ export default function Form() {
     const response = await fetch(endpoint, options);
     if (response.status === 200) {
       toast({
-        description: "Success! You will receive your TBTC shortly.",
+        description: "Success! You will receive your tBTC shortly.",
         duration: 5000,
       })
     }
@@ -56,18 +57,19 @@ export default function Form() {
       }, 3000);
       return "Sent!";
     }
-    return "Get bitcoin";
+    return "Get tBTC";
   }, [sending, sent]);
 
   return (
     <div className="flex-grow">
       <form onSubmit={handleSubmit}>
         <div className="flex flex-1 w-full max-w-xl items-center space-x-2 justify-center">
-          <Bitcoin size={24} />
-          <Input disabled={sending} required type="address" id="address" placeholder="Bitcoin address, e.g. tb1qhqqqals048gr7g4uwnre35cmjlrlj745h85nk4 *" name="address" defaultValue="tb1qhqqqals048gr7g4uwnre35cmjlrlj745h85nk4" />
+          <Bitcoin size={30} />
+          <Input disabled={sending} required type="address" id="address" placeholder="Bitcoin address, e.g. tb1qhqqqals048gr7g4uwnre35cmjlrlj745h85nk4 *" name="address" />
           <Button disabled={sending} type="submit">{button}</Button>
         </div>
       </form>
+      <Explainer />
     </div>
   );
 }
