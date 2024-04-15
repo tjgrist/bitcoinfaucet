@@ -11,8 +11,8 @@ export default function Balance() {
 
     return (
         <div className="space-y-2 text-center">
-            <div className="text-sm text-muted-foreground text-center justify-between">
-                {balance}
+            <div className="inline-flex text-sm text-muted-foreground text-center pt-1">
+                <Bitcoin size={18}/>{balance}
             </div>
         </div>
     )

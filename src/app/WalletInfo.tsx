@@ -31,7 +31,7 @@ export default function WalletInfo() {
                     <CardHeader>
                         <CardTitle className="text-center">Balance</CardTitle>
                         <CardDescription className="text-center">
-                            <Balance />
+                        <Balance />
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-col text-center items-center">
