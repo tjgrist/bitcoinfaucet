@@ -2,6 +2,7 @@
 
 import { ExternalLinkIcon } from "@radix-ui/react-icons"
 import { ColumnDef } from "@tanstack/react-table"
+import { Bitcoin } from "lucide-react"
 import Link from "next/link"
 
 export type Transaction = {
@@ -24,16 +25,17 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "tbtc",
     header: "Amount",
+    cell: ({ row }) => <div className="flex"><Bitcoin size={18}/>{row.getValue("tbtc")}</div>,
   },
   {
     accessorKey: "txId",
     header: "Transaction",
     cell: ({ row }) => (
-      <div className="flex items-center space-x-1">
-        <Link href={`https://blockstream.info/testnet/tx/${row.getValue("txId")}`} target="_blank" rel="noreferrer">
-          View 
-        </Link>
+      <div>
+        <Link className="flex items-center space-x-1" href={`https://blockstream.info/testnet/tx/${row.getValue("txId")}`} target="_blank" rel="noreferrer">
+          View&nbsp;
         <ExternalLinkIcon />
+        </Link>
       </div>
     ),
   },
