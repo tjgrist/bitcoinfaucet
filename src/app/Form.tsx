@@ -48,6 +48,7 @@ export default function Form() {
     setSending(false);
     mutate("/api/transactions?filter=all");
     mutate("/api/transactions?filter=mine");
+    mutate("/api/transactions");
     mutate("/api/balance");
     mutate("/api/limits");
   };
