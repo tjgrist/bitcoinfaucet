@@ -19,7 +19,7 @@ export default function Transactions() {
                 <h3 className="text-lg font-semibold py-2">Recent Transactions</h3>
                 <Button className="mt-1" variant="link" onClick={() => setFilter(filter === "mine" ? "all" : "mine")}><Filter size={16} />&nbsp;Filter by {filter === "mine" ? "all IPs" : "my IP"}</Button>
             </div>
-            {!data ? <Loading /> : <DataTable columns={columns} data={data.slice(0, 7)} />}
+            {!data ? <Loading /> : <DataTable columns={columns} data={data.slice(0, 15)} />}
         </div>
     );
 }
