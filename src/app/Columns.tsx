@@ -2,8 +2,9 @@
 
 import { ExternalLinkIcon } from "@radix-ui/react-icons"
 import { ColumnDef } from "@tanstack/react-table"
-import { Bitcoin } from "lucide-react"
+import { Bitcoin, Copy } from "lucide-react"
 import Link from "next/link"
+import { useState } from "react"
 
 export type Transaction = {
   id: string
@@ -11,6 +12,7 @@ export type Transaction = {
   ip: string,
   timestamp: string,
   txId: string,
+  address: string,
 }
 
 export const columns: ColumnDef<Transaction>[] = [
@@ -21,6 +23,34 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "ip",
     header: "IP Address",
+  },
+  {
+    accessorKey: "address",
+    header: "tBTC Address",
+    cell: ({ row }) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [copied, setCopied] = useState(false);
+      
+      const copyToClipboard = () => {
+        navigator.clipboard.writeText(row.getValue("address") as string);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      };
+
+      return (
+        <div className="flex items-center space-x-2">
+          <span>{row.getValue("address")}</span>
+          <button
+            onClick={copyToClipboard}
+            className="p-1 hover:bg-gray-200 rounded"
+            title="Copy to clipboard"
+          >
+            <Copy size={16} />
+          </button>
+          {copied && <span className="text-green-500 text-sm">Copied!</span>}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "tbtc",
@@ -39,4 +69,4 @@ export const columns: ColumnDef<Transaction>[] = [
       </div>
     ),
   },
-] 
+]
