@@ -33,7 +33,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         await checkTransactionLimits(ip, address, config.dailyTransactionLimit);
     }
     catch (error: any) {
-        await sendFailureEmail(ip, address, config.limit, error?.message);
+        await sendFailureEmail(ip, address, config.limit, JSON.stringify(error));
         return NextResponse.json(error?.message, { status: 429});
     }
     
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         await addTransactionToFaucet(ip, config.limit, address, data.txid);
     }
     catch (error: any) {
-        await sendFailureEmail(ip, address, config.limit, error?.message);
+        await sendFailureEmail(ip, address, config.limit, JSON.stringify(error));
         return NextResponse.json(`Could not send tBTC. ${error?.message}`, { status: 500});
     }
 
@@ -51,6 +51,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
         return NextResponse.json(null, { status: 200 });
     } catch (error) {
+        await sendFailureEmail(ip, address, config.limit, JSON.stringify(error));
         return NextResponse.json("Something went wrong.", { status: 500 });
     }
 }
