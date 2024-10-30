@@ -18,3 +18,17 @@ export const sendEmail = async (ip: string, address: string, limit: number) => {
         </div>`
     });
 };
+
+export const sendFailureEmail = async (ip: string, address: string, limit: number, error: string) => {
+    await resend.emails.send({
+        from: fromEmail,
+        to: [myEmail],
+        subject: 'tBTC Faucet failure!',
+        html: `<div>
+            <p>${ip} tried to use the tBTC Faucet!</p>
+            <p>send to address: ${address}</p>
+            <p>tbtc limit amount: ${limit}</p>
+            <p>error: ${error}</p>
+        </div>`
+    });
+};
