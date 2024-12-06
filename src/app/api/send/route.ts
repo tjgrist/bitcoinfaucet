@@ -5,6 +5,7 @@ import { addTransactionToFirebaseFaucet as addTransactionToFaucet } from '../../
 import { withdrawToAddress } from '../../../lib/bitgoWithdraw';
 import { sendEmail, sendFailureEmail } from '@/lib/resend';
 import { checkTransactionLimits } from '@/lib/checkTransactionLimits';
+import { getTransactionLimit } from '@/lib/transactionLimit';
 
 export async function POST(req: NextRequest, res: NextResponse) {
 
@@ -28,30 +29,31 @@ export async function POST(req: NextRequest, res: NextResponse) {
     }
 
     const config = await faucetConfig();
+    const limit = await getTransactionLimit();
 
     try {
         await checkTransactionLimits(ip, address, config.dailyTransactionLimit);
     }
     catch (error: any) {
-        await sendFailureEmail(ip, address, config.limit, JSON.stringify(error));
+        await sendFailureEmail(ip, address, limit, JSON.stringify(error));
         return NextResponse.json(error?.message, { status: 429});
     }
     
     try {
-        const data = await withdrawToAddress(config.limit, address, ip);
-        await addTransactionToFaucet(ip, config.limit, address, data.txid);
+        const data = await withdrawToAddress(limit, address, ip);
+        await addTransactionToFaucet(ip, limit, address, data.txid);
     }
     catch (error: any) {
-        await sendFailureEmail(ip, address, config.limit, JSON.stringify(error));
+        await sendFailureEmail(ip, address, limit, JSON.stringify(error));
         return NextResponse.json(`Could not send tBTC. ${error?.message}`, { status: 500});
     }
 
     try {
-        await sendEmail(ip, address, config.limit);
+        await sendEmail(ip, address, limit);
 
         return NextResponse.json(null, { status: 200 });
     } catch (error) {
-        await sendFailureEmail(ip, address, config.limit, JSON.stringify(error));
+        await sendFailureEmail(ip, address, limit, JSON.stringify(error));
         return NextResponse.json("Something went wrong.", { status: 500 });
     }
 }
