@@ -1,12 +1,11 @@
-import { getBalance } from "@/lib/balance";
 import faucetConfig from "@/lib/faucetLimit";
+import { getTransactionLimit } from "@/lib/transactionLimit";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, res: NextResponse) {
     const faucet = await faucetConfig();
-    const balance = await getBalance();
     return NextResponse.json({
-        limit: balance * 0.01,
+        limit: await getTransactionLimit(),
         dailyTransactionLimit: faucet.dailyTransactionLimit,
     });
 }
