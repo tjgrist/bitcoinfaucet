@@ -6,7 +6,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
     const faucet = await faucetConfig();
     const balance = await getBalance();
     return NextResponse.json({
-        limit: balance * .01,
+        limit: balance * 0.01,
         dailyTransactionLimit: faucet.dailyTransactionLimit,
     });
 }
