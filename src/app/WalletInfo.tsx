@@ -44,7 +44,7 @@ export default function WalletInfo() {
                                 <Separator />
                                 <h4 className="text-sm font-medium leading-none">Transaction Amount Limit</h4>
                                 <div className="text-sm text-muted-foreground inline-flex">
-                                    <Bitcoin size={18}/> {config?.limit}
+                                    <Bitcoin size={18}/> {config?.limit * 1e-8}
                                 </div>
                                 <Separator />
                                 <h4 className="text-sm font-medium leading-none">Daily Transaction Limit</h4>

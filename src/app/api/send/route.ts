@@ -45,7 +45,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     }
     catch (error: any) {
         await sendFailureEmail(ip, address, limit, JSON.stringify(error));
-        return NextResponse.json(`Could not send tBTC. ${error?.message}`, { status: 500});
+        return NextResponse.json(`Could not send tBTC. ${error?.response?.data?.error}`, { status: 500});
     }
 
     try {
