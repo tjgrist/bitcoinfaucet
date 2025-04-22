@@ -93,7 +93,7 @@ export default function Form() {
             {data && <Shuffle size={30} className="ml-4" onClick={randomAddress}/> }
           </div>
           <Button 
-            disabled={sending} 
+            disabled={sending || true} 
             type="submit"
             className="w-full text-lg py-6"
           >
