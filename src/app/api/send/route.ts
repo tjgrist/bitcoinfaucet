@@ -28,32 +28,34 @@ export async function POST(req: NextRequest, res: NextResponse) {
         return NextResponse.json('Could not determine IP.', { status: 400 });
     }
 
-    const config = await faucetConfig();
-    const limit = await getTransactionLimit();
+    return NextResponse.json('Faucet is empty.', { status: 503 });
 
-    try {
-        await checkTransactionLimits(ip, address, config.dailyTransactionLimit);
-    }
-    catch (error: any) {
-        await sendFailureEmail(ip, address, limit, JSON.stringify(error));
-        return NextResponse.json(error?.message, { status: 429});
-    }
+    // const config = await faucetConfig();
+    // const limit = await getTransactionLimit();
+
+    // try {
+    //     await checkTransactionLimits(ip, address, config.dailyTransactionLimit);
+    // }
+    // catch (error: any) {
+    //     await sendFailureEmail(ip, address, limit, JSON.stringify(error));
+    //     return NextResponse.json(error?.message, { status: 429});
+    // }
     
-    try {
-        const data = await withdrawToAddress(limit, address, ip);
-        await addTransactionToFaucet(ip, limit, address, data.txid);
-    }
-    catch (error: any) {
-        await sendFailureEmail(ip, address, limit, JSON.stringify(error));
-        return NextResponse.json(`Could not send tBTC. ${error?.response?.data?.error}`, { status: 500});
-    }
+    // try {
+    //     const data = await withdrawToAddress(limit, address, ip);
+    //     await addTransactionToFaucet(ip, limit, address, data.txid);
+    // }
+    // catch (error: any) {
+    //     await sendFailureEmail(ip, address, limit, JSON.stringify(error));
+    //     return NextResponse.json(`Could not send tBTC. ${error?.response?.data?.error}`, { status: 500});
+    // }
 
-    try {
-        await sendEmail(ip, address, limit);
+    // try {
+    //     await sendEmail(ip, address, limit);
 
-        return NextResponse.json(null, { status: 200 });
-    } catch (error) {
-        await sendFailureEmail(ip, address, limit, JSON.stringify(error));
-        return NextResponse.json("Something went wrong.", { status: 500 });
-    }
+    //     return NextResponse.json(null, { status: 200 });
+    // } catch (error) {
+    //     await sendFailureEmail(ip, address, limit, JSON.stringify(error));
+    //     return NextResponse.json("Something went wrong.", { status: 500 });
+    // }
 }
